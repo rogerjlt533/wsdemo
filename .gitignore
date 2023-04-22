@@ -1,0 +1,10 @@
+.DS_Store
+node_modules/
+dist/
+npm-debug.log
+.vscode/
+.idea/
+#Electron-builder output
+/dist_electron
+package-lock.json
+demo.js
