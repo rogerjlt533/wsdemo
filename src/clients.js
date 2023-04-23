@@ -5,10 +5,14 @@ const url = 'ws://localhost:8080'
 function receiveMessage(event) {
     console.log("Client received a message:" + event.data)
     // console.log(event.target.getClient())
-    event.target.getClient().send("hello")
+    // event.target.getClient().send("hello")
 }
 
 const socket = new client.Socket(url, receiveMessage)
+setInterval(function () {
+    console.log("heart")
+    socket.send("10000")
+}, 3000)
 // console.log(socket.getContainer())
 
 // client.init(url, receiveMessage)
