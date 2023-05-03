@@ -6,10 +6,16 @@ const collectionComponent = require('./component/collection')
 const sync_socket = new client.Socket
 
 exports.initConnect = function (url, hk) {
-    if (sync_socket.connect_state) {
+    if (sync_socket.request_state) {
         sync_socket.close()
     }
     sync_socket.init(url, hk, receiveMessage, service.getLastLog)
+}
+
+exports.closeConnect = function () {
+    if (sync_socket.request_state) {
+        sync_socket.close()
+    }
 }
 
 function processBind(socket, message) {
