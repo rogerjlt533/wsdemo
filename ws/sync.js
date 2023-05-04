@@ -211,31 +211,31 @@ function receiveMessage(event) {
 // 自动定时更新
 setInterval(function () {
     // 自动更新下行collection
-    if (!sync_socket.pull_collection_processing && sync_socket.connect_state) {
+    if (sync_socket.request_state && !sync_socket.pull_collection_processing && sync_socket.connect_state) {
         service.processDownloadCollection(sync_socket)
     }
 }, 500)
 // setInterval(function () {
 //     // 自动执行上行collection
-//     if (!sync_socket.push_collection_processing && sync_socket.connect_state) {
+//     if (sync_socket.request_state && !sync_socket.push_collection_processing && sync_socket.connect_state) {
 //         service.processUploadCollection(sync_socket)
 //     }
 // }, 500)
 setInterval(function () {
     // 自动执行删除collection
-    if (!sync_socket.remove_collection_processing && sync_socket.connect_state) {
+    if (sync_socket.request_state && !sync_socket.remove_collection_processing && sync_socket.connect_state) {
         service.processDeleteCollection(sync_socket)
     }
 }, 500)
 setInterval(function () {
     // 自动更新下行note
-    if (!sync_socket.note_log_processing && sync_socket.connect_state) {
+    if (sync_socket.request_state && !sync_socket.note_log_processing && sync_socket.connect_state) {
         service.processDownloadNoteQueue(sync_socket)
     }
 }, 500)
 // setInterval(function () {
 //     // 自动执行上行note
-//     if (!sync_socket.push_note_processing && sync_socket.connect_state) {
+//     if (sync_socket.request_state && !sync_socket.push_note_processing && sync_socket.connect_state) {
 //         service.processUploadNote(sync_socket)
 //     }
 // }, 500)
