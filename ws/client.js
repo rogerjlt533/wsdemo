@@ -3,6 +3,22 @@ const md5 = require('blueimp-md5')
 const common = require('../tool/common')
 
 class Socket {
+    url = ''
+    msgFunc = null
+    lastFunc = null
+    client_id = ''
+    client = this
+    connection = null
+    connect_state = false
+    remove_collection_processing = false
+    pull_collection_processing = false
+    note_log_processing = false
+    push_collection_processing = false
+    push_note_processing = false
+    hk = ''
+    user_id = 0
+    request_state = false
+    init_collection_list = []
     init(url, hk, msgFunc, lastFunc) {
         this.url = url
         this.msgFunc = msgFunc
@@ -62,7 +78,7 @@ class Socket {
         }
     }
     close() {
-        socket.connection.close()
+        this.connection.close()
         this.connect_state = false
         this.remove_collection_processing = false
         this.pull_collection_processing = false

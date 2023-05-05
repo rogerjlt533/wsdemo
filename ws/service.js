@@ -1,5 +1,4 @@
 const common = require('../tool/common')
-const http = require('../tool/http')
 const logSqliteTool = require('../tool/logsqlitetool')
 const transformComponent = require('./component/transform')
 const collectionComponent = require('./component/collection')
@@ -8,6 +7,7 @@ const userComponent = require('./component/user')
 const noteComponent = require('./component/note')
 const noteLogComponent = require('./component/notelog')
 const downloadNoteProvider = require('../sync/downloadnote')
+const syncService = require('../service/sync')
 
 exports.syncComponent = syncComponent
 exports.collectionComponent = collectionComponent
@@ -91,8 +91,8 @@ exports.processDownloadCollection = function (socket) {
             if (!common.empty(item.pull_info)) {
                 const collection_info = JSON.parse(item.pull_info)
                 if (parseInt(collection_info.is_delete) === 1) {
-                    // this.removeCollection(socket.user_id, collection_info.id)
-                    syncComponent.createRemoveCollectionTask(item.collection_id, item.user_id, item.pull_info, item.hash_code)
+                    this.removeCollection(socket.user_id, collection_info.id)
+                    // syncComponent.createRemoveCollectionTask(item.collection_id, item.user_id, item.pull_info, item.hash_code)
                 } else {
                     this.initCollection(socket.user_id, collection_info, item.hash_code)
                 }
@@ -125,10 +125,13 @@ exports.processDeleteCollection = function (socket) {
     console.log("processing collection delete!")
     try {
         socket.remove_collection_processing = true
-        // 获取待删除下行的笔记本队列,删除（1、无笔记直接删除）
         const list = syncComponent.getCollectionTaskList(socket.user_id, 1, 3)
         list.forEach(item => {
-            this.removeCollection(socket.user_id, item.collection_id)
+            const collection = collectionComponent.getRemote(item.collection_id)
+            if (!common.empty(collection)) {
+                syncService.processRemoteDeleted(collection.id)
+            }
+            syncComponent.removeCollectionTask(item.id)
         })
         socket.remove_collection_processing = false
     } catch (e) {
